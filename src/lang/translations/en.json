@@ -1,0 +1,6 @@
+{
+  "barcode": "barcode | barcodes",
+  "comment": "comment | comments",
+  "document": "document | documents",
+  "user": "user | users"
+}
