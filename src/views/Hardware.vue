@@ -25,8 +25,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import api from "../plugins/axios";
-import { Hardware } from "../plugins/backend";
+import api from "@/plugins/axios";
+import { Hardware } from "@/plugins/backend";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
 
 export default Vue.extend({
@@ -60,7 +60,7 @@ export default Vue.extend({
       });
     },
     DeleteHardwareItem (hardware: Hardware) {
-      this.$refs.confirm.open('Delete', `Are you sure you want to delete ${hardware.name}?`, { color: 'red' }).then((confirm) => {
+      (this.$refs.confirm as Vue & { open: (title: string, message: string, options: object) => Promise<boolean>}).open('Delete', `Are you sure you want to delete ${hardware.name}?`, { color: 'red' }).then((confirm) => {
 if (confirm === true) {
   api.delete(`/hardware/${hardware.id}`).then(() => {
     this.GetHardwareItems();

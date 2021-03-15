@@ -67,7 +67,7 @@ data() {
 methods: {
  
       OpenBarcodeDialog() {
-        this.$refs.barcode.open().then((barcodeInfo) => {
+        (this.$refs.barcode as Vue & { open: () => Promise<object>}).open().then((barcodeInfo) => {
           this.code = barcodeInfo.code;
           this.format = barcodeInfo.format;
           this.LoadBarcodeItems();

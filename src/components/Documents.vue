@@ -39,6 +39,7 @@
 import Vue from "vue";
 import api from "../plugins/axios";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import { Document } from "@/plugins/backend";
 
 export default Vue.extend({
   name: "Documents",
@@ -74,8 +75,8 @@ export default Vue.extend({
         return '';
       }
       },
-      DeleteDocument(document) {
-        this.$refs.confirm.open('Delete', `Are you sure you want to delete ${document.filename}?`, { color: 'red' }).then((confirm) => {
+      DeleteDocument(document: Document) {
+        (this.$refs.confirm as Vue & { open: (title: string, message: string, options: object) => Promise<boolean>}).open('Delete', `Are you sure you want to delete ${document.filename}?`, { color: 'red' }).then((confirm) => {
           if (confirm === true) {
             api.delete(`/${this.type}/${this.id}/documents/${document.id}`).then(() => {
               this.LoadDocuments();
@@ -102,7 +103,7 @@ export default Vue.extend({
 
 
 
-      api.post(`/${this.type}/${this.id}/documents`, formData).then((response) => {
+      api.post(`/${this.type}/${this.id}/documents`, formData).then(() => {
         this.LoadDocuments();
         this.description = '';
         this.tags = [];

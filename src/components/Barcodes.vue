@@ -31,9 +31,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import api from "../plugins/axios";
+import api from "@/plugins/axios";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import ScanBarcode from "@/components/ScanBarcode.vue";
+import { Barcode } from "@/plugins/backend";
 
 export default Vue.extend({
   name: "Barcodes",
@@ -65,7 +66,7 @@ created() {
   },
   methods: {
     OpenBarcodeDialog() {
-      this.$refs.barcode.open().then((barcodeInfo) => {
+      (this.$refs.barcode as Vue & { open: () => Promise<any> }).open().then((barcodeInfo) => {
         this.code = barcodeInfo.code,
         this.format = barcodeInfo.format
       });
@@ -85,8 +86,8 @@ created() {
         this.LoadBarcodes();
       });
     },
-    DeleteBarcode (barcode) {
-       this.$refs.confirm.open('Delete', `Are you sure you want to delete ${barcode.code}?`, { color: 'red' }).then((confirm) => {
+    DeleteBarcode (barcode: Barcode) {
+       (this.$refs.confirm as Vue & { open: (title: string, message: string, options: object) => Promise<boolean>}).open('Delete', `Are you sure you want to delete ${barcode.code}?`, { color: 'red' }).then((confirm) => {
          if (confirm === true) {
            api.delete(`/${this.type}/${this.id}/barcodes/${barcode.id}`).then(() => {
              this.LoadBarcodes();

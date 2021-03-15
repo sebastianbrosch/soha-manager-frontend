@@ -60,7 +60,7 @@ components: {
       });
     },
     DeleteSoftwareItem (software: Software) {
-       this.$refs.confirm.open('Delete', `Are you sure you want to delete ${software.name}?`, { color: 'red' }).then((confirm) => {
+      (this.$refs.confirm as Vue & { open: (title: string, message: string, options: object) => Promise<boolean>}).open('Delete', `Are you sure you want to delete ${software.name}?`, { color: 'red' }).then((confirm) => {
 if (confirm === true) {
   api.delete(`/software/${software.id}`).then(() => {
    this.GetSoftwareItems();

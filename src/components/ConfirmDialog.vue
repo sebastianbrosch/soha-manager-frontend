@@ -31,7 +31,7 @@ export default {
     }
   }),
   methods: {
-    open(title: string, message: string, options) {
+    open(title: string, message: string, options: object) {
       this.dialog = true
       this.title = title
       this.message = message

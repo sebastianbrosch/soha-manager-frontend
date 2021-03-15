@@ -23,7 +23,7 @@
     </v-list>
     <v-divider></v-divider>
     <form>
-      <v-textarea v-model="content"></v-textarea>
+      <v-textarea v-model="content" :label="$tc('comment', 1)"></v-textarea>
       <v-btn color="success" @click="SaveComment"><v-icon left>mdi-content-save-outline</v-icon>{{ $tc('save') }}</v-btn>
     </form>
   </v-container>
@@ -31,8 +31,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import api from "../plugins/axios";
+import api from "@/plugins/axios";
 import { mapGetters } from 'vuex'
+import { User } from "@/plugins/backend";
 
 export default Vue.extend({
   name: "Comments",
@@ -52,7 +53,7 @@ export default Vue.extend({
   },
 
   methods: {
-    GetProfileLink(user) {
+    GetProfileLink(user: User) {
       if (user) {
         return `/users/${user.id}/profile`;
       }

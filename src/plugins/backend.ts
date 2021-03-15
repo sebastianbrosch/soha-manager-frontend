@@ -22,3 +22,18 @@ export interface User {
   lastname: string;
   email: string;
 }
+
+export interface Document {
+  id: number;
+  filename: string;
+  mime: string;
+  static_file: string;
+  tags: string;
+}
+
+export interface Barcode {
+  id: number;
+  code: string;
+  format: string;
+  label: string;
+}

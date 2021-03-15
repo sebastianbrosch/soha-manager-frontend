@@ -14,10 +14,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import api from "../plugins/axios";
+import api from "@/plugins/axios";
 
 export default Vue.extend({
-  name: "Software",
+  name: "Hardware",
 
 
    created () {
