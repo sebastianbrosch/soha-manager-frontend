@@ -37,3 +37,11 @@ export interface Barcode {
   format: string;
   label: string;
 }
+
+export interface File {
+  id: number;
+  description: string;
+  filename: string;
+  mime: string;
+  static_filename: string;
+}

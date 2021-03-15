@@ -43,12 +43,16 @@
             <v-tabs dark >
               <v-tab>{{ $tc('comment', 2) }}</v-tab>
               <v-tab>{{ $tc('document', 2) }}</v-tab>
-<v-tab>{{ $tc('barcode', 2) }}</v-tab>
+              <v-tab>{{ $tc('file', 2) }}</v-tab>
+            <v-tab>{{ $tc('barcode', 2) }}</v-tab>
       <v-tab-item>
         <Comments type="software" :id="this.id" />
       </v-tab-item>
       <v-tab-item>
 <Documents type="software" :id="this.id" />
+      </v-tab-item>
+      <v-tab-item>
+          <Files type="software" :id="this.id" />
       </v-tab-item>
       <v-tab-item>
      <Barcodes :id="this.id" type="software" />
@@ -68,13 +72,15 @@ import api from "../plugins/axios";
 import Comments from '@/components/Comments.vue';
 import Documents from '@/components/Documents.vue';
 import Barcodes from '@/components/Barcodes.vue';
+import Files from '@/components/Files.vue';
 
 export default Vue.extend({
   name: "SoftwareDetails",
   components: {
       Comments,
       Documents,
-      Barcodes
+      Barcodes,
+      Files
   },
   data () {
       return {

@@ -9,7 +9,7 @@
     <v-chip small class="mr-2" v-for="type in splitItems(item.tags)" :key="type">{{ type }}</v-chip>
   </template>
       <template v-slot:[`item.actions`]="{ item }">
-           <v-btn v-if="item.static_file" icon :href="`https://192.168.0.143:9001/static/${item.static_file}`" target="_blank">
+           <v-btn v-if="item.static_file" icon :href="`https://192.168.0.143:9001/static/documents/${item.static_file}`" target="_blank">
             <v-icon  >mdi-file-eye-outline</v-icon>
           </v-btn>
        <v-btn icon @click="DeleteDocument(item)">
@@ -83,9 +83,6 @@ export default Vue.extend({
             });
           }
         });
-      },
-     FormattedDate(dateValue: string) {
-          return new Date(dateValue).toISOString().substring(0,10);
       },
     SaveDocument() {
 

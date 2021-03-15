@@ -2,5 +2,6 @@
   "barcode": "barcode | barcodes",
   "comment": "comment | comments",
   "document": "document | documents",
+  "file": "file | files",
   "user": "user | users"
 }
