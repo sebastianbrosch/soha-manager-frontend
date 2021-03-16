@@ -1,5 +1,5 @@
 <template>
-  <v-data-table :headers="this.hardwareHeaders" :items="this.hardwareItems" :item-class="SetRowColor">
+  <v-data-table :headers="this.hardwareHeaders" :items="this.hardwareItems" :item-class="SetRowColor" :custom-sort="customSort">
     <template v-slot:[`item.actions`]="{ item }">
       <v-btn plain icon v-if="IsAssigned(item)" @click.stop="RetractHardware(item.id)">
         <v-icon>mdi-link-variant-off</v-icon>
@@ -70,6 +70,20 @@ export default Vue.extend({
         this.LoadHardwareItems();
       });
     },
+    customSort(items, index, isDesc) {
+      items.sort((a, b) => {
+        if (index[0] === undefined) {
+          if (!isDesc) {
+            return + this.IsAssigned(a) < + this.IsAssigned(b) ? -1 : 1;
+          } else {
+            return + this.IsAssigned(b) < + this.IsAssigned(a) ? -1 : 1;
+          }
+
+        }
+      });
+      return items;
+    }
+    
   }
 });
 
