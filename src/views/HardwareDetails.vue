@@ -77,7 +77,7 @@
 
 <script lang="js">
 import Vue from "vue";
-import api from "../plugins/axios";
+import AxiosApi from "@/plugins/axios";
 import Comments from "@/components/Comments.vue";
 import Documents from "@/components/Documents.vue";
 import Software from "@/components/Software.vue";
@@ -133,7 +133,7 @@ export default Vue.extend({
 	methods: {
 		GetHardware () {
 			if (this.$route.params.id) {
-				api.get(`/hardware/${this.$route.params.id}`).then(response => {
+				AxiosApi.get(`/hardware/${this.$route.params.id}`).then(response => {
 					this.hardware._id = response.data.id,
 					this.hardware.name = response.data.name,
 					this.hardware.producer = response.data.producer,
@@ -174,11 +174,11 @@ export default Vue.extend({
 			};
 
 			if (this.hardware._id) {
-				api.put(`/hardware/${this.hardware._id}`, data).then(() => {
+				AxiosApi.put(`/hardware/${this.hardware._id}`, data).then(() => {
 					this.$router.push('/hardware');
 				});
 			} else {
-				api.post("/hardware", data).then(() => {
+				AxiosApi.post("/hardware", data).then(() => {
 					this.$router.push('/hardware');
 				});
 			}
