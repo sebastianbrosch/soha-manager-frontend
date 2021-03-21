@@ -1,93 +1,89 @@
 <template>
-  <v-data-table :headers="this.softwareHeaders" :items="this.softwareItems" :item-class="SetRowColor" :custom-sort="customSort">
-    <template v-slot:[`item.actions`]="{ item }">
-      <v-btn icon plain :to="`/software/edit/${item.id}`">
-        <v-icon>mdi-eye-outline</v-icon>
-      </v-btn>
-      <v-btn plain icon v-if="IsAssigned(item)" @click="RetractSoftware(item.id)">
-        <v-icon>mdi-link-variant-off</v-icon>
-      </v-btn>
-      <v-btn plain icon v-if="!IsAssigned(item)" @click="AssignSoftware(item.id)">
-        <v-icon>mdi-link-variant</v-icon>
-      </v-btn>
-    </template>
-  </v-data-table>
+	<v-data-table :headers="this.listSoftwareHeaders" :items="this.listSoftware" :item-class="SetRowColor" :custom-sort="CustomSort">
+		<template v-slot:[`item.actions`]="{ item }">
+			<v-btn icon plain :to="`/software/edit/${item.id}`">
+				<v-icon>mdi-eye-outline</v-icon>
+			</v-btn>
+			<v-btn plain icon v-if="IsAssociated(item)" @click="DissociateSoftware(item.id)">
+				<v-icon>mdi-link-variant-off</v-icon>
+			</v-btn>
+			<v-btn plain icon v-if="!IsAssociated(item)" @click="AssociateSoftware(item.id)">
+				<v-icon>mdi-link-variant</v-icon>
+			</v-btn>
+		</template>
+	</v-data-table>
 </template>
 
-<script lang="ts">
+<script lang="js">
 import Vue from "vue";
-import api from "../plugins/axios";
+import AxiosApi from "@/plugins/axios";
 
 export default Vue.extend({
-  name: "Software",
+	name: "Software",
 
-  created () {
-    this.LoadSoftwareItems();
-  },
+	props: {
+		id: null,
+		type: null,
+	},
 
-  data () {
-    return {
-      softwareItems: [],
-      softwareHeaders: [
-        {value: 'name', text: 'Name'},
-        {value: 'state', text: 'State'},
-        {value: 'actions', sortable: false, align: 'end' },
-      ]
-    }
-  },
+	data () {
+		return {
+			listSoftware: [],
+			listSoftwareHeaders: [
+				{value: 'name', text: 'Name', align: 'start'},
+				{value: 'state', text: 'State'},
+				{value: 'actions', sortable: false, align: 'end'},
+			]
+		}
+	},
 
-  props: {
-    id: Number,
-    type: String,
-  },
-
-  methods: {
-    SetRowColor(item) {
-      return this.IsAssigned(item) ? 'light-green lighten-5' : 'unset';
+	methods: {
+		GetSoftware () {
+			AxiosApi.get(`/software/${this.type}`).then((response) => {
+				this.listSoftware = response.data;
+			});
+		},
+		AssociateSoftware (id) {
+			AxiosApi.put(`/${this.type}/${this.id}/software`, {
+				softwareAdd: id
+			}).then(() => {
+				this.GetSoftware();
+			});
+		},
+		DissociateSoftware (id) {
+			AxiosApi.put(`/${this.type}/${this.id}/software`, {
+				softwareRemove: id
+			}).then(() => {
+				this.GetSoftware();
+			});
+		},
+		IsAssociated (item) {
+			if (this.type === 'hardware') {
+				return (item.Hardware.filter(hardware => hardware.id === this.id).length > 0);
+			} else if (this.type === 'users') {
+				return (item.Users.filter(user => user.id === this.id).length > 0);
+			} else {
+				return false;
+			}
     },
-    IsAssigned (item) {
-      
-      if (this.type === 'hardware') {
-        return (item.Hardware.filter(itemHardware => itemHardware.id === this.id).length > 0);
-      } else if (this.type === 'users') {
-        return (item.Users.filter(itemUser => itemUser.id === this.id).length > 0);
-      }
-      return false;
-    },
-
-     LoadSoftwareItems () {
-      api.get(`/software/${this.type}`).then((response) => {
-        this.softwareItems = response.data;
+		SetRowColor (item) {
+			return this.IsAssociated(item) ? 'light-green lighten-5' : 'unset';
+		},
+    CustomSort (items, index, isDescending) {
+			items.sort((a, b) => {
+				if (!isDescending) {
+					return + this.IsAssociated(a) < + this.IsAssociated(b) ? -1 : 1;
+				} else {
+					return + this.IsAssociated(b) < + this.IsAssociated(a) ? -1 : 1;
+				}
       });
-    },
-     AssignSoftware (id: number) {
-       api.put(`/${this.type}/${this.id}`, {
-        softwareAdd: id
-      }).then((response) => {
-        this.LoadSoftwareItems();
-      });
-    },
-     RetractSoftware (id: number) {
-       api.put(`/${this.type}/${this.id}`, {
-        softwareRemove: id
-      }).then((response) => {
-        this.LoadSoftwareItems();
-      });
-    },
 
-    customSort(items, index, isDesc) {
-      items.sort((a, b) => {
-        if (index[0] === undefined) {
-          if (!isDesc) {
-            return + this.IsAssigned(a) < + this.IsAssigned(b) ? -1 : 1;
-          } else {
-            return + this.IsAssigned(b) < + this.IsAssigned(a) ? -1 : 1;
-          }
+			return items;
+		}
+	},
 
-        }
-      });
-      return items;
-    }
-  },
+	created () {
+		this.GetSoftware();
+	},
 });
 </script>
