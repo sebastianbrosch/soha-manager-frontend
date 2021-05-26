@@ -1,90 +1,85 @@
 <template>
-  <v-data-table :headers="this.hardwareHeaders" :items="this.hardwareItems" :item-class="SetRowColor" :custom-sort="customSort">
-    <template v-slot:[`item.actions`]="{ item }">
-      <v-btn plain icon v-if="IsAssigned(item)" @click.stop="RetractHardware(item.id)">
-        <v-icon>mdi-link-variant-off</v-icon>
-      </v-btn>
-      <v-btn plain icon v-else @click.stop="AssignHardware(item.id)">
-        <v-icon>mdi-link-variant</v-icon>
-      </v-btn>
-    </template>
-  </v-data-table>
+	<v-data-table :headers="this.listHardwareHeaders" :items="this.listHardware" :item-class="SetRowColor" :custom-sort="CustomSort">
+		<template v-slot:[`item.actions`]="{ item }">
+			<v-btn plain icon v-if="IsAssociated(item)" @click.stop="DissociateHardware(item.id)">
+				<v-icon>mdi-link-variant-off</v-icon>
+			</v-btn>
+			<v-btn plain icon v-else @click.stop="AssociateHardware(item.id)">
+				<v-icon>mdi-link-variant</v-icon>
+			</v-btn>
+		</template>
+	</v-data-table>
 </template>
 
-
-<script lang="ts">
+<script lang="js">
 import Vue from "vue";
-import api from "@/plugins/axios";
+import AxiosApi from "@/plugins/axios";
 
 export default Vue.extend({
-  name: "Hardware",
+	name: "Hardware",
 
+	props: {
+		id:null,
+		type: null,
+	},
 
-   created () {
-     this.LoadHardwareItems();
-  },
-
-   data () {
-    return {
-      hardwareItems: [],
-      hardwareHeaders: [
-        {value: 'name', text: 'Name'},
-        {value: 'serialnumber', text: 'S/N'},
-        {value: 'state', text: 'State'},
-        {value: 'actions', sortable: false, align: 'end' },
-      ]
+	data () {
+		return {
+			listHardware: [],
+			listHardwareHeaders: [
+				{value: 'name', text: 'Name', align: 'start'},
+				{value: 'state', text: 'State'},
+				{value: 'actions', sortable: false, align: 'end' },
+			]
     }
   },
 
-  props: {
-    id: Number,
-    type: String,
-  },
+	methods: {
+		GetHardware () {
+			AxiosApi.get(`/hardware/${this.type}`).then((response) => {
+				console.log(response);
+				this.listHardware = response.data;
+			});
+		},
+		AssociateHardware (id) {
+			AxiosApi.put(`/${this.type}/${this.id}`, {
+				hardwareAdd: id
+			}).then(() => {
+				this.GetHardware();
+			});
+		},
+		DissociateHardware (id) {
+			AxiosApi.put(`/${this.type}/${this.id}`, {
+				hardwareRemove: id
+			}).then(() => {
+				this.GetHardware();
+			});
+		},
+		IsAssociated (item) {
+			if (this.type === 'users') {
+				return (item.Users.filter(user => user.id == this.id).length > 0);
+      } else {
+				return false;
+			}
+    },
+		SetRowColor (item) {
+			return this.IsAssociated(item) ? 'light-green lighten-5' : 'unset';
+    },
+		CustomSort (items, index, isDescending) {
+			items.sort((a, b) => {
+				if (!isDescending) {
+					return +this.IsAssociated(a) < +this.IsAssociated(b) ? -1 : 1;
+				} else {
+					return +this.IsAssociated(b) < +this.IsAssociated(a) ? -1 : 1;
+				}
+			});
 
-  methods: {
-    SetRowColor(item) {
-      return this.IsAssigned(item) ? 'light-green lighten-5' : 'unset';
-    },
-    LoadHardwareItems () { 
-      api.get(`/hardware/${this.type}`).then((response) => {
-        this.hardwareItems = response.data;
-      });
-    },
-    IsAssigned(item) {
-      if (this.type === 'users') {
-        return (item.Users.filter(itemUser => itemUser.id == this.id).length > 0);
-      }
-      return false;
-    },
-    AssignHardware(id: number) {
-      api.put(`/${this.type}/${this.id}`, {
-        hardwareAdd: id
-      }).then(() => {
-        this.LoadHardwareItems();
-      });
-    },
-    RetractHardware(id: number) {
-      api.put(`/${this.type}/${this.id}`, {
-        hardwareRemove: id
-      }).then(() => {
-        this.LoadHardwareItems();
-      });
-    },
-    customSort(items, index, isDesc) {
-      items.sort((a, b) => {
-        if (index[0] === undefined) {
-          if (!isDesc) {
-            return + this.IsAssigned(a) < + this.IsAssigned(b) ? -1 : 1;
-          } else {
-            return + this.IsAssigned(b) < + this.IsAssigned(a) ? -1 : 1;
-          }
+			return items;
+		}
+	},
 
-        }
-      });
-      return items;
-    }
-    
-  }
+	created () {
+		this.GetHardware();
+	},
 });
-
 </script>

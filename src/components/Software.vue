@@ -72,9 +72,9 @@ export default Vue.extend({
     CustomSort (items, index, isDescending) {
 			items.sort((a, b) => {
 				if (!isDescending) {
-					return + this.IsAssociated(a) < + this.IsAssociated(b) ? -1 : 1;
+					return +this.IsAssociated(a) < +this.IsAssociated(b) ? -1 : 1;
 				} else {
-					return + this.IsAssociated(b) < + this.IsAssociated(a) ? -1 : 1;
+					return +this.IsAssociated(b) < +this.IsAssociated(a) ? -1 : 1;
 				}
       });
 
