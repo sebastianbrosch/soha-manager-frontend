@@ -88,6 +88,11 @@ const routes: Array<RouteConfig> = [
     name: 'UserProfile',
     component: () => import('../views/UserProfile.vue'),
   },
+  {
+    path: '/hardware/:id/disposal',
+    name: 'HardwareDisposal',
+    component: () => import('../views/HardwareDisposal.vue'),
+  },
 ];
 
 const router = new VueRouter({
