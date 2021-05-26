@@ -4,6 +4,7 @@
   "comment": "Kommentar | Kommentare",
   "document": "Dokument | Dokumente",
   "file": "Datei | Dateien",
+  "hardware": "Hardware",
   "logout": "Abmelden",
   "new hardware": "Neue Hardware",
   "new software": "Neue Software",
@@ -11,6 +12,7 @@
   "save": "Speichern",
   "signin": "Anmelden",
   "software": "Software",
+  "state": "Status",
   "user": "Benutzer",
   "yes": "Ja"
 }

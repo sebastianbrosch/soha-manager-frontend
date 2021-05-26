@@ -19,7 +19,7 @@
     </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar clipped-left disable-resize-watcher app dark prominent shrink-on-scroll src="https://picsum.photos/1920/1080?random" flat>
+    <v-app-bar clipped-left app dark dense src="https://picsum.photos/1920/1080?random" flat>
 
 <template v-slot:img="{ props }">
         <v-img
