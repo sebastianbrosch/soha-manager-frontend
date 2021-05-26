@@ -14,26 +14,32 @@
         <v-btn icon :to="{ name: 'UserEdit', params: { id: item.id } }">
           <v-icon>mdi-pencil-outline</v-icon>
         </v-btn>
-        <v-btn icon  @click="DeleteUserItem(item)">
+        <v-btn icon @click="DeleteUserItem(item)">
           <v-icon dense>mdi-delete-outline</v-icon>
         </v-btn>
       </template>
     </v-data-table>
+		<ConfirmDialog ref="confirm"></ConfirmDialog>
   </v-container>
 </template>
-  
+
 <script lang="ts">
 import Vue from "vue";
 import { User } from "../plugins/backend";
-import api from "../plugins/axios";
+import AxiosApi from "@/plugins/axios";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
 
 export default Vue.extend({
   name: "User",
-  
+
   created () {
     this.GetUserItems();
   },
-  
+
+	components: {
+		ConfirmDialog
+	},
+
   data () {
     return {
       userHeader: [
@@ -45,18 +51,22 @@ export default Vue.extend({
       userItems: []
     }
   },
-   
+
   methods: {
     GetUserItems () {
-      api.get('/users').then((response) => {
+      AxiosApi.get('/users').then((response) => {
         this.userItems = response.data;
       });
     },
     DeleteUserItem(user: User) {
-      api.delete(`/users/${user.id}`).then(() => {
-        this.GetUserItems();
-      });
-    }
+			(this.$refs.confirm as Vue & { open: (title: string, message: string, options: object) => Promise<boolean>}).open('Delete', `Are you sure you want to delete ${user.email}?`, { color: 'red' }).then((confirm) => {
+				if (confirm === true) {
+					AxiosApi.delete(`/users/${user.id}`).then(() => {
+						this.GetUserItems();
+					});
+				}
+			});
+    },
   },
 });
 </script>
