@@ -53,19 +53,19 @@
 							<v-tab>{{ $tc('software', 2) }}</v-tab>
 							<v-tab>{{ $tc('barcode', 2) }}</v-tab>
 							<v-tab-item>
-								<Comments type="hardware" :id="this.hardware._id" />
+								<Comments type="hardware" :id="this.hardware._id"/>
 							</v-tab-item>
 							<v-tab-item>
-								<Documents type="hardware" :id="this.hardware._id" />
+								<Documents type="hardware" :id="this.hardware._id"/>
 							</v-tab-item>
 							<v-tab-item>
-								<Files type="hardware" :id="this.hardware._id" />
+								<Files type="hardware" :id="this.hardware._id"/>
 							</v-tab-item>
 							<v-tab-item>
-								<Software :id="this.hardware._id" type="hardware"/>
+								<Software type="hardware" :id="this.hardware._id"/>
 							</v-tab-item>
 							<v-tab-item>
-								<Barcodes :id="this.hardware._id" type="hardware" />
+								<Barcodes type="hardware" :id="this.hardware._id"/>
 							</v-tab-item>
 						</v-tabs>
 					</v-card>

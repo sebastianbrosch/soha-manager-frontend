@@ -145,8 +145,6 @@ export default Vue.extend({
 					this.software.expiryDate = response.data.expiryDate,
 					this.software.offlineArchive = response.data.offlineArchive
 				});
-			} else {
-				this.ResetSoftware();
 			}
 		},
 		CancelSoftware () {
