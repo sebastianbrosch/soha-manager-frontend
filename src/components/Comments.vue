@@ -4,9 +4,9 @@
 
     <v-list two-line>
       <template v-for="(comment) in this.commentItems">
-       
+
         <v-list-item
-         
+
           :key="comment.id"
         >
           <v-list-item-avatar>
@@ -16,14 +16,15 @@
           <v-list-item-content>
             <v-list-item-title v-if="comment.User" class="text--secondary subtitle-2"><a class="text-decoration-none" :href="GetProfileLink(comment.User)">{{ comment.User.firstname }} {{ comment.User.lastname }}</a> am {{ GetFormattedDate(comment.createdAt) }}</v-list-item-title>
             <v-list-item-title v-else class="text--secondary subtitle-2">Anonym am {{ GetFormattedDate(comment.createdAt) }}</v-list-item-title>
-            <v-list-item-subtitle class="text--primary body-1">{{ comment.content }}</v-list-item-subtitle>
+            <v-list-item-subtitle class="text--primary body-1" v-html="comment.content"></v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </template>
     </v-list>
-    <v-divider></v-divider>
     <form>
-      <v-textarea v-model="content" :label="$tc('comment', 1)"></v-textarea>
+			<template>
+				<vue-editor class="mb-4" v-model="content" :editor-toolbar="editorToolbar" />
+			</template>
       <v-btn color="success" @click="SaveComment"><v-icon left>mdi-content-save-outline</v-icon>{{ $tc('save') }}</v-btn>
     </form>
   </v-container>
@@ -34,9 +35,13 @@ import Vue from "vue";
 import api from "@/plugins/axios";
 import { mapGetters } from 'vuex'
 import { User } from "@/plugins/backend";
+import { VueEditor } from "vue2-editor";
 
 export default Vue.extend({
   name: "Comments",
+	components: {
+		VueEditor
+	},
   props: {
     type: String,
     id: Number,
@@ -45,6 +50,10 @@ export default Vue.extend({
     return {
       content: null,
       commentItems: null,
+			editorToolbar: [
+				["bold", "italic", "underline"],
+				[{ list: "ordered" }, { list: "bullet" }]
+			]
     }
   },
 
