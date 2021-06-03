@@ -53,6 +53,7 @@
 							<v-tab>{{ $tc('comment', 2) }}</v-tab>
 							<v-tab>{{ $tc('document', 2) }}</v-tab>
 							<v-tab>{{ $tc('file', 2) }}</v-tab>
+							<v-tab>{{ $tc('user', 2) }}</v-tab>
 							<v-tab>{{ $tc('barcode', 2) }}</v-tab>
 							<v-tab-item>
 								<Comments type="software" :id="this.software._id" />
@@ -62,6 +63,9 @@
 							</v-tab-item>
 							<v-tab-item>
 								<Files type="software" :id="this.software._id" />
+							</v-tab-item>
+							<v-tab-item>
+								<User type="software" :id="this.software._id" />
 							</v-tab-item>
 							<v-tab-item>
 								<Barcodes type="software" :id="this.software._id" />
@@ -81,6 +85,7 @@ import Comments from '@/components/Comments.vue';
 import Documents from '@/components/Documents.vue';
 import Barcodes from '@/components/Barcodes.vue';
 import Files from '@/components/Files.vue';
+import User from '@/components/User.vue';
 
 export default Vue.extend({
 	name: "SoftwareDetails",
@@ -89,7 +94,8 @@ export default Vue.extend({
 		Barcodes,
 		Comments,
 		Documents,
-		Files
+		Files,
+		User
 	},
 
 	data () {
